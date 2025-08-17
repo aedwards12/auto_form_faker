@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2025-01-16
+
+### Added
+- **SimpleForm Support**: AutoFormFaker now works seamlessly with SimpleForm!
+- SimpleForm syntax: `f.input :name, input_html: { auto_faker: true }`
+- Full compatibility with SimpleForm's input system and options
+- Support for SimpleForm collection inputs (select, radio_buttons, check_boxes)
+- Automatic detection of SimpleForm input types
+- String values support: `input_html: { auto_faker: 'specific_value' }`
+- Comprehensive test suite for SimpleForm integration
+
+### Changed
+- Enhanced priority system to handle both Rails form helpers and SimpleForm
+- Improved handling of explicit string and integer values
+
 ## [0.1.0] - 2025-01-16
 
 ### Added

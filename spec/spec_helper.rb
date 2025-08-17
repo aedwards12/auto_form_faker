@@ -4,6 +4,13 @@ require 'rails'
 require 'action_view'
 require 'faker'
 
+# Try to load SimpleForm
+begin
+  require 'simple_form'
+rescue LoadError
+  # SimpleForm not available
+end
+
 RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect

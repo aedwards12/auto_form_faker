@@ -2,12 +2,15 @@
 
 A Rails gem that automatically fills form fields with realistic fake data using the Faker gem. Perfect for development and staging environments where you want to quickly test forms without manually entering data.
 
+**Works with both standard Rails forms and SimpleForm!**
+
 ## Features
 
 - 🎯 **Explicit Control**: Only fields with `auto_faker: true` get fake data
 - 🧠 **Context-Aware**: Intelligently detects field types (movie_name → movie titles, company_name → company names)
 - 🎭 **Custom Faker Classes**: Override with specific `auto_faker_class: "Faker::Space.galaxy"`
 - 🔗 **Association Support**: Handle association IDs with `auto_faker: 123` or random IDs
+- 📝 **SimpleForm Compatible**: Full support for SimpleForm gem
 - 🛡️ **Environment Safe**: Only works in development/staging by default
 - ⚙️ **Configurable**: Custom field mappings and environment settings
 
@@ -26,13 +29,23 @@ bundle install
 
 ## Usage
 
-### Basic Usage
+### Basic Usage with Rails Forms
 
 ```ruby
 <%= form_with model: @user do |f| %>
   <%= f.text_field :name, auto_faker: true %>           # Gets fake name
   <%= f.email_field :email, auto_faker: true %>         # Gets fake email
   <%= f.text_field :company %>                          # No fake data
+<% end %>
+```
+
+### SimpleForm Usage
+
+```ruby
+<%= simple_form_for @user do |f| %>
+  <%= f.input :name, input_html: { auto_faker: true } %>           # Gets fake name
+  <%= f.input :email, input_html: { auto_faker: true } %>          # Gets fake email
+  <%= f.input :company %>                                          # No fake data
 <% end %>
 ```
 
@@ -49,18 +62,23 @@ The gem intelligently detects field context:
 
 ### Custom Faker Classes
 
-Override the default faker with specific methods:
-
+#### Rails Forms
 ```ruby
 <%= f.text_field :planet, auto_faker: true, auto_faker_class: "Faker::Space.galaxy" %>
 <%= f.text_field :hero, auto_faker: true, auto_faker_class: "Faker::Superhero.name" %>
 <%= f.password_field :pwd, auto_faker: true, auto_faker_class: "Faker::Internet.password(min_length: 8)" %>
 ```
 
+#### SimpleForm
+```ruby
+<%= f.input :planet, input_html: { auto_faker: true, auto_faker_class: "Faker::Space.galaxy" } %>
+<%= f.input :hero, input_html: { auto_faker: true, auto_faker_class: "Faker::Superhero.name" } %>
+<%= f.input :pwd, input_html: { auto_faker: true, auto_faker_class: "Faker::Internet.password(min_length: 8)" } %>
+```
+
 ### Association Fields
 
-Handle association IDs:
-
+#### Rails Forms
 ```ruby
 # Specific association ID
 <%= f.number_field :user_id, auto_faker: 123 %>
@@ -72,16 +90,37 @@ Handle association IDs:
 <%= f.number_field :user_id, auto_faker: -> { User.active.pluck(:id).sample } %>
 ```
 
+#### SimpleForm
+```ruby
+# Specific association ID
+<%= f.input :user_id, input_html: { auto_faker: 123 } %>
+
+# Random existing record ID
+<%= f.input :user_id, input_html: { auto_faker: true } %>
+
+# Custom logic
+<%= f.input :user_id, input_html: { auto_faker: -> { User.active.pluck(:id).sample } } %>
+
+# Specific string values
+<%= f.input :status, as: :select, input_html: { auto_faker: 'active' } %>
+```
+
 ### Select Fields
 
-Works with select fields too:
-
+#### Rails Forms
 ```ruby
 <%= f.select :category_id, options_from_collection_for_select(Category.all, :id, :name), 
     {}, { auto_faker: true } %>  # Randomly selects a category
 
 <%= f.select :status, [['Active', 1], ['Inactive', 0]], 
     {}, { auto_faker: 1 } %>     # Selects 'Active'
+```
+
+#### SimpleForm
+```ruby
+<%= f.input :category_id, collection: Category.all, input_html: { auto_faker: true } %>  # Random selection
+
+<%= f.input :status, collection: [['Active', 1], ['Inactive', 0]], input_html: { auto_faker: 1 } %>  # Selects 'Active'
 ```
 
 ## Configuration

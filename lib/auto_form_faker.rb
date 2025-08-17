@@ -2,6 +2,7 @@ require_relative "auto_form_faker/version"
 require_relative "auto_form_faker/configuration"
 require_relative "auto_form_faker/field_mappings"
 require_relative "auto_form_faker/form_helper_extension"
+require_relative "auto_form_faker/simple_form_extension"
 require_relative "auto_form_faker/railtie" if defined?(Rails)
 
 module AutoFormFaker
